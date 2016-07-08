@@ -5,33 +5,41 @@
         <section class="login-container">
 
 
-            <div class="col button-row text-center">
-                <button class="button button-calm" ng-click="scanBarcode()">
+            <div class="col header text-center" ng-hide="QrUser.id||newObject">
+                <strong>To Say Just</strong>
+            </div>
+            <div class="col button-row text-center ">
+                <button class="button button-energized" ng-click="scanBarcode()">
                     <span class="icon ion-social-codepen large "> </span>
                     Scan QR/BAR Code
                 </button>
             </div>
 
-            <div style="text-align: center;" ng-hide="QrUser.id||newObject">
-                <img src="http://api.file-dog.shatkonlabs.com/files/rahul/66" height="450"/>
+            <div style="text-align: center;" class="col header text-center" ng-hide="QrUser.id||newObject">
+                <img src="img/home1.jpg" style="max-width: 100%"/>
+            </div>
+
+            <div style="text-align: center;" class="col header text-center" ng-hide="QrUser.id||newObject">
+                <img src="img/home2.jpg" style="max-width: 100%"/>
             </div>
 
 
-            <div class="card " ng-show="newObject">
+            <div class="col list" ng-show="newObject">
 
-                <div class="item item-divider">
-                    Sorry Info not Found!<br/>
-                    Please Register Code
+                <div class="col header text-center">
+                    <strong>
+                    No one found this! Please add for all...
+                        </strong>
                 </div>
-                <div class="item item-text-wrap">
+                <div >
 
                     <form ng-submit="addObject()" name="addworker-f">
-                        <div class="list">
+
 
                             <label class="item item-input ">
                                 <span class="input-label">Name</span>
                                 <input type="text" name="name" placeholder="enter name" ng-model="data.name"
-                                       ng-minlength="6"
+
                                        required/>
                             </label>
 
@@ -40,13 +48,21 @@
                                 <div class="item ">
                                     Picture
                                     <a class="button pull-right" ng-click="takePicture('p');"><span
-                                            class="icon ion-android-camera large calm"></span></a>
+                                            class="icon ion-android-camera large energized"></span></a>
                                     <a class="button pull-right" ng-click="selectPicture('p')"><span
-                                            class="icon ion-images large calm"></span></a>
+                                            class="icon ion-images large energized"></span></a>
                                 </div>
                             </div>
 
                             <label class="item item-input ">
+                                <span class="input-label">Description</span>
+                                <textarea placeholder="enter description"
+                                          name="description" ng-model="data.description"
+                                          rows="4" ng-minlength="1" required></textarea>
+                            </label>
+
+
+                            <!--<label class="item item-input ">
                                 <span class="input-label">Brand</span>
                                 <input type="text" name="brand" placeholder="enter brand" ng-model="data.brand"
                                        ng-minlength="6"
@@ -65,17 +81,10 @@
                                 <input type="number" name="mobile" placeholder="mobile" ng-model="data.mobile"
                                        ng-minlength="10"
                                        ng-maxlength="10"/>
-                            </label>
+                            </label>-->
 
 
-                            <div class="padding">
 
-                                <p ng-show="addworker-f.mobile.$error.minlength || addworker-f.mobile.$error.maxlength">
-                                    *
-                                    Mobile No.
-                                    show be of 10 digit.</p>
-
-                            </div>
 
 
                             <input class="button button-block button-positive" type="submit" name="need now"
@@ -83,7 +92,7 @@
                                    nav-direction="forward"
                                    ng-disabled="addworker-f.$invalid ">
 
-                        </div>
+
                     </form>
 
                 </div>
@@ -93,47 +102,49 @@
 
             <div class="card " ng-show="QrUser.id" ng-class="">
 
-                <div id="profile-bg">
-
+                <div class="col header text-center"> {{QrUser.name}}</div>
+                <div style="text-align: center;" class="col header text-center" >
+                    <img src="http://api.file-dog.shatkonlabs.com/files/rahul/{{QrUser.photo}}" style="max-width: 100%"/>
                 </div>
-                <div id="content">
-                    <div id="profile-info">
-                        <img id="profile-image" src="http://api.file-dog.shatkonlabs.com/files/rahul/{{QrUser.photo}}">
-                        <h3 id="profile-name">{{QrUser.name}} <i class="icon ion-checkmark-circled balanced"></i></h3>
 
-                    <span id="profile-description">
-                        <a class="icon-left ion-ios7-telephone" ng-href="tel: +91 {{QrUser.mobile}}">
-                            <span class="ion-android-call large"></span>
-                            +91 {{QrUser.mobile}}
-                        </a> , {{QrUser.rating}}/5<span class="ion-star large"></span>, AGE: {{ calculateAge(QrUser.dob) }}
-                    </span>
-
-
+                <div class="col header text-center"> <h2> <strong>{{QrUser.name}}</strong></h2></div>
+                <div class="col header text-center">
+                <p>{{QrUser.description}}</p>
+</div>
+                <div class="col header text-center">
+                <strong>What you want to say ?</strong>
                     </div>
-                </div>
-
                 <form ng-submit="feedback()" name="addfeedback-f">
                     <div class="list">
 
                         <label class="item item-input ">
-                            <span class="input-label">Feedback...</span>
+
                             <textarea placeholder="enter feedback..." name="feedback" ng-model="data.feedback" rows="4"
                                       ng-minlength="1" ng-maxlength="140" required></textarea>
                         </label>
 
-                        <input class="button button-block button-positive" type="submit" name="need now"
+                        <div class="col button-row text-center">
+
+                            <input class="button button-block button-energized" type="submit" name="need now"
                                value="say"
                                nav-direction="forward"
                                ng-disabled="addfeedback-f.$invalid ">
+                            </div>
 
                     </div>
                 </form>
+                <hr/>
+                <br>
+
+                <div class="col header text-center">
+                    <strong>People Said ...</strong>
+                </div>
 
                 <ion-list>
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="feed in feeds "
-                              type="item-text-wrap">
+                    <ion-item ng-repeat="feed in feeds "
+                              class="item item-text-wrap">
                         <h2>{{feed.feedback}}</h2>
-                        <i style="font-style: italic;font-size: 0.8em;">{{feed.creation}}</i>
+                        <i style="font-style: italic;font-size: 0.8em;">{{feed.creation | date:'MM/dd/yyyy @ h:mma'}}</i>
                     </ion-item>
 
 

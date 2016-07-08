@@ -26,9 +26,6 @@
     <script src="js/app.js"></script>
 
 
-
-
-
     <script src="js/home.ctrl.js"></script>
 
     <script src="js/services.js"></script>
@@ -52,44 +49,40 @@
     <ion-view hide-nav-bar="true">
 
         <ion-content scroll="false">
-        <section class="login-container padding">
-            <div class = "col header text-center">
-                <img src="./img/ionic.png" class = "logo" height="330"/>
-            </div>
-            <div class = "col header text-center">
-                <strong>Login/Signup</strong>
-    </div>
+            <section class="login-container padding">
+                <div class="col header text-center">
+                    <img src="./img/ionic.png" class="logo" height="330"/>
+                </div>
+                <div class="col header text-center">
+                    <strong>Login/Signup</strong>
+                </div>
 
 
-
-
-                    <div class = "col  text-center">
-                    <label class="item item-input " >
+                <div class="col  text-center">
+                    <label class="item item-input ">
                         <span class="input-label">Full Name</span>
                         <input type="text" name="name"
                                placeholder="Full Name" ng-model="data.name">
                     </label>
 
-                        </div>
-            <div class = "col  text-center">
+                </div>
+                <div class="col  text-center">
                     <label class="item item-input ">
                         <span class="input-label">Mobile</span>
                         <input type="number" name="mobile"
                                placeholder="Mobile" ng-model="data.mobile" ng-minlength="10" ng-maxlength="10" required>
                     </label>
-</div>
+                </div>
 
-            <div class = "col button-row text-center">
+                <div class="col button-row text-center">
 
-                        <input class="button button-block button-calm"
-                               type="submit" name="submit" value="Scan Now" nav-direction="forward"
-                               ng-disabled="register.$invalid" ng-click="reg()">
-                    </div>
-
-
+                    <input class="button button-block button-energized"
+                           type="submit" name="submit" value="Scan Now" nav-direction="forward"
+                           ng-disabled="register.$invalid" ng-click="reg()">
+                </div>
 
 
-        </section>
+            </section>
         </ion-content>
     </ion-view>
 

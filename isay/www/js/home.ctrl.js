@@ -7,15 +7,53 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
                                       $cordovaGeolocation, $localstorage, $cordovaDevice, $cordovaBarcodeScanner,
                                       $cordovaFileTransfer, $cordovaCamera, FILEDOG, WAZIR, DIGIEYE) {
 
-       /* if ($localstorage.get('name') === undefined || $localstorage.get('mobile') === undefined || $localstorage.get('name') === "" || $localstorage.get('mobile') === "") {
+        if ($localstorage.get('name') === undefined || $localstorage.get('mobile') === undefined
+            || $localstorage.get('name') === "" || $localstorage.get('mobile') === "") {
             $ionicHistory.clearHistory();
             $state.go('reg');
-        }*/
+        }
 
         $scope.data = {};
 
 
 
+        $scope.showFeeds = function(){
+            DIGIEYE.getObject($scope.newObjectId)
+                .then(function (d) {
+
+                    if(d['objects'][0]) {
+                        $scope.QrUser = d['objects'][0];
+                        WAZIR.getFeedbacks($scope.newObjectId)
+                            .then(function (d) {
+
+                                console.log(JSON.stringify(d));
+
+
+                                if(d['feedbacks'][0]) {
+                                    $scope.feeds = d['feedbacks'];
+
+                                }
+                                else
+                                    $scope.noFeeds = true;
+
+                                console.log(JSON.stringify($scope.feeds));
+                            })
+                            .finally(function () {
+                                // Stop the ion-refresher from spinning
+                                $scope.$broadcast('scroll.refreshComplete');
+                            });
+
+                    }
+                    else
+                        $scope.newObject = true;
+
+                    console.log(JSON.stringify($scope.QrUser));
+                })
+                .finally(function () {
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+        };
 
         $scope.scanBarcode = function () {
             $cordovaBarcodeScanner.scan().then(function (imageData) {
@@ -24,42 +62,9 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
                 $scope.newObjectId = imageData.text;
                 $scope.QrUser = null;
                 $scope.newObject = false;
-
-                DIGIEYE.getObject(imageData.text)
-                    .then(function (d) {
-
-                        if(d['objects'][0]) {
-                            $scope.QrUser = d['objects'][0];
-                            WAZIR.getFeedbacks($scope.newObjectId)
-                                .then(function (d) {
-
-                                    console.log(JSON.stringify(d));
+                $scope.showFeeds();
 
 
-                                    if(d['feedbacks'][0]) {
-                                        $scope.feeds = d['feedbacks'];
-
-                                    }
-                                    else
-                                        $scope.noFeeds = true;
-
-                                    console.log(JSON.stringify($scope.feeds));
-                                })
-                                .finally(function () {
-                                    // Stop the ion-refresher from spinning
-                                    $scope.$broadcast('scroll.refreshComplete');
-                                });
-
-                        }
-                        else
-                            $scope.newObject = true;
-
-                        console.log(JSON.stringify($scope.QrUser));
-                    })
-                    .finally(function () {
-                        // Stop the ion-refresher from spinning
-                        $scope.$broadcast('scroll.refreshComplete');
-                    });
 
                 console.log("Barcode Format -> " + imageData.text);
                 console.log("Barcode Format -> " + imageData.format);
@@ -270,6 +275,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
                     else*/ //{
                         $scope.data.feedback = "";
 
+                    $scope.showFeeds();
+
 
                         alert("Given successfully");
 
@@ -289,6 +296,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
 
                         "object_id": $scope.newObjectId,
                         "mobile": $scope.data.mobile,
+                        "description": $scope.data.description,
                         "photo": $scope.data.photo,
                         "name": $scope.data.name,
                         "brand": $scope.data.brand,
@@ -309,25 +317,12 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
                     if ($scope.resp == "")
                         alert("Failed! User already exists");
                     else {
-                        $scope.data.voter_card = "";
-                        $scope.data.pan_card = "";
-                        $scope.data.adhar_card = "";
-                        $scope.data.driving_license = "";
+                        $scope.newObject = false;
                         $scope.data.name = "";
                         $scope.data.mobile = "";
-                        $scope.data.emergency_mobile = "";
                         $scope.data.type = "";
                         $scope.data.address = "";
-                        $scope.data.native_place = ""
-                        $scope.data.native_add = "";
-                        $scope.data.dob = "";
-                        $scope.data.education = "";
-                        $scope.data.experience = "";
-                        $scope.data.gender = "";
-                        $scope.data.remark = "";
-                        $scope.data.salary = "";
-                        $scope.data.bonus = "";
-
+                        $scope.data.description = "";
                         alert("Registered Successfuly");
 
                     }
@@ -343,7 +338,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
 
         $scope.count = 0;
         $ionicPlatform.registerBackButtonAction(function (event) {
-            if ($state.current.name == "tab.service-list") {
+            if ($state.current.name == "tab.home") {
                 $cordovaToast.showLongBottom('Press 2 more time to exit').then(function (success) {
                     // success
                 }, function (error) {
@@ -387,7 +382,7 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
         $scope.logout = function () {
             var logoutConfirmPopup = $ionicPopup.confirm({
                 title: 'Confirm Logout',
-                template: 'Are you sure to LogOut?'
+                template: '<div style="text-align: center;">Are you sure?</div>'
             });
 
             logoutConfirmPopup.then(function (res) {
@@ -596,8 +591,8 @@ angular.module('starter.controllers', ['ionic', 'ngCordova', 'ionic.rating'])
                             "name": $scope.data.name,
                             "mobile": $scope.data.mobile,
                             "type": "human",
-                            "email": "" + $scope.data.email,
-                            "device_id": $cordovaDevice.getUUID()
+                            "email": "" + $scope.data.email/*,
+                            "device_id": $cordovaDevice.getUUID()*/
 
                     })
                     .then(function (d) {
